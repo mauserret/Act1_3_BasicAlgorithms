@@ -4,7 +4,7 @@ if there's any logs for the given range, prints them into console and creates an
 the provided range.
 
 Authors: A01648241
-         A0
+         A01642638
          A0
          A0
 Date: 11/09/2026
