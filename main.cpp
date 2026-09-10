@@ -1,3 +1,15 @@
+/* This program reads the data set called "bitacora.txt" that contaings different logs, saves it in a vector with pointers to class Log, then
+it orders the logs from the earliest to the latest date and prompts the user for a date range (e.g. Sep 10 to Sep 15), the the program will determine 
+if there's any logs for the given range, prints them into console and creates an output file named "orderedRangedLogs.txt" containing the logs inside
+the provided range.
+
+Authors: A01648241
+         A0
+         A0
+         A0
+Date: 11/09/2026
+*/
+
 #include <iostream>
 #include <fstream>
 #include <sstream>
@@ -5,6 +17,10 @@
 #include <vector>
 #include <unordered_map>
 
+/**
+ * @class Log
+ * @brief Represents a single server log entry containing timestamps, ip address, host, and message.
+ */
 class Log {
     private:
         std::string month;
@@ -24,6 +40,12 @@ class Log {
             month{month}, doubleMonth{doubleMonth}, day{day}, hour{hour}, min{min}, sec{sec}, totalTime{totalTime},
             ip{ip}, host{host}, message{message} {}
 
+        /**
+         * @brief Overloads the stream insertion operator to format the output for the log entry.
+         * @param os Output stream reference where the output will be printed.
+         * @param log The log to format it's output.
+         * @return std::ostream& reference to the modified output stream.
+         */
         friend std::ostream& operator<<(std::ostream& os, const Log& log) {
                     os << log.getMonth() << " " 
                     << log.getDay() << " " 
@@ -49,21 +71,37 @@ class Log {
         std::string getMessage() const { return message; }
 };
 
+/**
+ * @brief Sorts a vector with the merge sort algorithm by using recursion to divide and conquer, uses merge() function.
+ * 
+ * @param v Reference to the vector to sort.
+ * @param l Starting index of the range to sort.
+ * @param r Ending index of the range to sort.
+ */
 template <typename T>
 void mergeSort(std::vector<T>& v, int l, int r) {
     if (l >= r) return;
-    int mid = (l + r) / 2;
+    int mid = l + (r - l) / 2;
     mergeSort(v, l, mid);
     mergeSort(v, mid + 1, r);
     merge(v, l, mid, r);
 }
 
+/**
+ * @brief Merges two sorted subarrays into a sorted subarray. Helper function for mergeSort()
+ * 
+ * @param v Reference to the vector with elements to merge.
+ * @param l Starting index of the left subarray.
+ * @param mid Ending index of the left subarray
+ * @param r Ending index of the right subarray.
+ */
 template <typename T>
 void merge(std::vector<T>& v, int l, int mid, int r) {
     std::vector<T> temp(r - l + 1);
     int i = l;
     int j = mid + 1;
     int k = 0;
+
     while (i <= mid && j <= r) {
         if (v[i]->getTotalTime() <= v[j]->getTotalTime()) {
             temp[k++] = v[i++];
@@ -132,15 +170,13 @@ int monthToInt(std::string& m) {
         {"Sep", 243},
         {"Oct", 273},
         {"Nov", 304},
-        {"Dic", 334},
+        {"Dec", 334},
     };
     return convert[m];
 }
 
 double getTotalTime(const double& month, const double& day, const double& hour, const double& min, const double& sec) {
-    double dMin = min/60;
-    double dSec = sec/3600;
-    return (month + day) * 24 + hour + dMin + dSec;
+    return (month + day) * 24 + hour + min / 60 + sec / 3600.0 ;
 }
 
 void getVector(const std::string& file_name) {
@@ -148,6 +184,7 @@ void getVector(const std::string& file_name) {
     std::ifstream file(file_name);
     if(!file.is_open()) {
         std::cout << "Couldn't open the file \n";
+        return;
     }
 
     std::string line;
@@ -194,7 +231,7 @@ void getVector(const std::string& file_name) {
 
     auto [startIdx, endIdx] = binarySearch(logs, startTime, endTime);
     if (startIdx != -1) {
-        std::ofstream orderedFile("orderedLogs.txt");
+        std::ofstream orderedFile("orderedRangedLogs.txt");
         if (orderedFile.is_open()) {
             for (int i = startIdx; i <= endIdx; i++) {
                 std::cout << *logs[i];
@@ -218,4 +255,3 @@ int main() {
     getVector("bitacora.txt");
     return 0;
 }
-
