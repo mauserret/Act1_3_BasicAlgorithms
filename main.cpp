@@ -234,7 +234,7 @@ std::vector<Log*> getVector(const std::string& file_name) {
     std::ifstream file(file_name);
     if (!file.is_open()) {
         std::cout << "Couldn't open the file \n";
-        exit;
+        return logs;
     }
 
     std::string line;
@@ -297,11 +297,17 @@ void printUserRange(const std::vector<T>& logsVect) {
 
 /**
  * @brief Initializes the code by sending the filename to getVector().
+ * @param argc Number of command-line arguments.
+ * @param argv Command-line arguments. argv[0] contains the path to the executable file and argv[1] contains the path to the input file.
  * @return 0 to finalize.
  */
-int main() {
+int main(int argc, char* argv[]) {
+        if (argc < 2) {
+        std::cout << "Usage: ./main <input_file>\n";
+        return 1;
+    }
     // Get logsVector
-    std::vector<Log*> logsVector = getVector("bitacora.txt");
+    std::vector<Log*> logsVector = getVector(argv[1]);
 
     // Order the logsVector
     mergeSort(logsVector , 0, logsVector.size() - 1);
