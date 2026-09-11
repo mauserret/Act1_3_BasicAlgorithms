@@ -286,7 +286,8 @@ void getVector(const std::string& file_name) {
 }
 
 /**
- * @brief Initializes the code by sending the filename to getVector()
+ * @brief Initializes the code by sending the filename to getVector().
+ * @return 0 to finalize.
  */
 int main() {
     getVector("bitacora.txt");
