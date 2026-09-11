@@ -122,6 +122,23 @@ void merge(std::vector<T>& v, int l, int mid, int r) {
 }
 
 /**
+ * @brief Saves the ordered vector of logs into the created file named orderedLogs
+ * @param v The vector to save into the file, Logs vector.
+ */
+template <typename T>
+void saveSortedLogs(const std::vector<T>& v) {
+    std::ofstream orderedFile("orderedLogs.txt");
+    if (orderedFile.is_open()) {
+        for (Log* log: v) {
+            orderedFile << *log;
+        }
+    } else {
+        std::cout << "Couldn't create the file \n";
+    }
+    
+}
+
+/**
  * @brief Searches for the first and last log inside a given time range using binary search. 
  * 
  * @param v Reference to the vector containing the sorted logs. 
@@ -208,7 +225,7 @@ double getTotalTime(const double& month, const double& day, const double& hour, 
 
 /** 
 * @brief Reads the input file, stores the logs in a vector, sorts them, 
-* searches for a user-provided date range and creates an output file. 
+* saved them inside an output file and searches for a user-provided date range.
 *
 * @param file_name Name of the input file containing the logs. 
 */
@@ -248,6 +265,7 @@ void getVector(const std::string& file_name) {
     file.close();
 
     mergeSort(logs, 0, logs.size() - 1);
+    saveSortedLogs(logs);
 
     std::string startMonth, endMonth;
     int startDay, endDay;
@@ -263,23 +281,14 @@ void getVector(const std::string& file_name) {
 
     auto [startIdx, endIdx] = binarySearch(logs, startTime, endTime);
     if (startIdx != -1) {
-        std::ofstream orderedFile("orderedRangedLogs.txt");
-        if (orderedFile.is_open()) {
-            for (int i = startIdx; i <= endIdx; i++) {
-                std::cout << *logs[i];
-
-                orderedFile << *logs[i];
-            }
+        for (int i = startIdx; i <= endIdx; i++) {
+            std::cout << *logs[i];
         }
-        else {
-            std::cout << "Couldn't create a file for the ordered logs \n";
-        }
-
     }
     else {
         std::cout << "No logs found for the given range. \n";
     }
-    // Releases memory from heap
+    // Releases memory from the heap
     for (Log* log : logs) {
         delete log;
     }
