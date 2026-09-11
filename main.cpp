@@ -5,8 +5,8 @@ the provided range.
 
 Authors: A01648241
          A01642638
-         A0
-         A0
+         A01648221
+         A01643073
 Date: 11/09/2026
 */
 
@@ -279,12 +279,15 @@ void getVector(const std::string& file_name) {
     else {
         std::cout << "No logs found for the given range. \n";
     }
-
+    // Releases memory from heap
     for (Log* log : logs) {
         delete log;
     }
 }
 
+/**
+ * @brief Initializes the code by sending the filename to getVector()
+ */
 int main() {
     getVector("bitacora.txt");
     return 0;
