@@ -1,6 +1,6 @@
-/* This program reads the data set called "bitacora.txt" that contaings different logs, saves it in a vector with pointers to class Log, then
-it orders the logs from the earliest to the latest date and prompts the user for a date range (e.g. Sep 10 to Sep 15), the the program will determine
-if there's any logs for the given range, prints them into console and creates an output file named "orderedLogs.txt" containing the logs inside
+/* This program reads the data set called "bitacora.txt" that contains different logs, saves it in a vector with pointers to class Log, then
+it orders the logs from the earliest to the latest date and prompts the user for a date range (e.g. Sep 10 to Sep 15). The program will determine
+if there are any logs for the given range, prints them into the console, and creates an output file named "orderedLogs.txt" containing the logs inside
 the provided range.
 
 Authors: A01648241
@@ -44,7 +44,7 @@ public:
     /**
      * @brief Overloads the stream insertion operator to format the output for the log entry.
      * @param os Output stream reference where the output will be printed.
-     * @param log The log to format it's output.
+     * @param log The log to format its output.
      * @return std::ostream& reference to the modified output stream.
      */
     friend std::ostream& operator<<(std::ostream& os, const Log& log) {
@@ -72,7 +72,7 @@ public:
 };
 
 /**
- * @brief Sorts a vector with the merge sort algorithm by using recursion to divide and conquer, uses merge() function.
+ * @brief Sorts a vector with the merge sort algorithm by using recursion to divide and conquer; uses the merge() function.
  *
  * @param v Reference to the vector to sort.
  * @param l Starting index of the range to sort.
@@ -305,9 +305,9 @@ int main() {
 
     // Order the logsVector
     mergeSort(logsVector , 0, logsVector.size() - 1);
-    // Save the sorted logs into an outputfile named orderedLogs.txt
+    // Save the sorted logs into an output file named orderedLogs.txt
     saveSortedLogs(logsVector);
-    // Prompts for a date range and prints if its found
+    // Prompts for a date range and prints if it's found
     printUserRange(logsVector);
 
     return 0;
