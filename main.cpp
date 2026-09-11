@@ -1,6 +1,6 @@
 /* This program reads the data set called "bitacora.txt" that contaings different logs, saves it in a vector with pointers to class Log, then
 it orders the logs from the earliest to the latest date and prompts the user for a date range (e.g. Sep 10 to Sep 15), the the program will determine
-if there's any logs for the given range, prints them into console and creates an output file named "orderedRangedLogs.txt" containing the logs inside
+if there's any logs for the given range, prints them into console and creates an output file named "orderedLogs.txt" containing the logs inside
 the provided range.
 
 Authors: A01648241
@@ -61,7 +61,6 @@ public:
     }
 
     std::string getMonth() const { return month; }
-    double getdoubleMonth() const { return doubleMonth; }
     double getDay() const { return day; }
     double getHour() const { return hour; }
     double getMin() const { return min; }
@@ -129,7 +128,7 @@ template <typename T>
 void saveSortedLogs(const std::vector<T>& v) {
     std::ofstream orderedFile("orderedLogs.txt");
     if (orderedFile.is_open()) {
-        for (Log* log: v) {
+        for (Log* log : v) {
             orderedFile << *log;
         }
     } else {
@@ -228,13 +227,14 @@ double getTotalTime(const double& month, const double& day, const double& hour, 
 * saved them inside an output file and searches for a user-provided date range.
 *
 * @param file_name Name of the input file containing the logs. 
+* @return logs vector with Log objects from the bitacora.txt file
 */
-void getVector(const std::string& file_name) {
+std::vector<Log*> getVector(const std::string& file_name) {
     std::vector<Log*> logs;
     std::ifstream file(file_name);
     if (!file.is_open()) {
         std::cout << "Couldn't open the file \n";
-        return;
+        exit;
     }
 
     std::string line;
@@ -263,10 +263,11 @@ void getVector(const std::string& file_name) {
         logs.push_back(log);
     }
     file.close();
+    return logs;
+}
 
-    mergeSort(logs, 0, logs.size() - 1);
-    saveSortedLogs(logs);
-
+template <typename T>
+void printUserRange(const std::vector<T>& logsVect) {
     std::string startMonth, endMonth;
     int startDay, endDay;
 
@@ -279,17 +280,17 @@ void getVector(const std::string& file_name) {
     double startTime = getTotalTime(monthToInt(startMonth), startDay, 0, 0, 0);
     double endTime = getTotalTime(monthToInt(endMonth), endDay, 23, 59, 59);
 
-    auto [startIdx, endIdx] = binarySearch(logs, startTime, endTime);
+    auto [startIdx, endIdx] = binarySearch(logsVect, startTime, endTime);
     if (startIdx != -1) {
         for (int i = startIdx; i <= endIdx; i++) {
-            std::cout << *logs[i];
+            std::cout << *logsVect[i];
         }
     }
     else {
         std::cout << "No logs found for the given range. \n";
     }
     // Releases memory from the heap
-    for (Log* log : logs) {
+    for (Log* log : logsVect) {
         delete log;
     }
 }
@@ -299,6 +300,15 @@ void getVector(const std::string& file_name) {
  * @return 0 to finalize.
  */
 int main() {
-    getVector("bitacora.txt");
+    // Get logsVector
+    std::vector<Log*> logsVector = getVector("bitacora.txt");
+
+    // Order the logsVector
+    mergeSort(logsVector , 0, logsVector.size() - 1);
+    // Save the sorted logs into an outputfile named orderedLogs.txt
+    saveSortedLogs(logsVector);
+    // Prompts for a date range and prints if its found
+    printUserRange(logsVector);
+
     return 0;
 }
