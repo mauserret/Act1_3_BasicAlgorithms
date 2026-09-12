@@ -234,7 +234,7 @@ std::vector<Log*> getVector(const std::string& file_name) {
     std::ifstream file(file_name);
     if (!file.is_open()) {
         std::cout << "Couldn't open the file \n";
-        return logs;
+        exit(1);
     }
 
     std::string line;
