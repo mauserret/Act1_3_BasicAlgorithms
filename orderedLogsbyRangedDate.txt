@@ -1,0 +1,113 @@
+Sep 10 00:01:02 192.0.2.166:4655 ci.dev-interno.example Failed password for root 
+Sep 10 00:11:22 203.0.113.140:4560 auth.nube-sur.example Failed password for illegal user guest 
+Sep 10 00:28:56 192.0.2.25:6864 web.nube-sur.example Failed password for illegal user test 
+Sep 10 00:33:30 198.51.100.8:6466 db.nube-sur.example Failed password for admin 
+Sep 10 00:33:56 192.0.2.166:5898 ci.dev-interno.example Failed password for illegal user guest 
+Sep 10 00:34:16 198.51.100.235:5858 git.dev-interno.example Failed password for root 
+Sep 10 00:54:37 192.0.2.205:4950 mail.nube-sur.example Failed password for illegal user test 
+Sep 10 01:06:06 203.0.113.140:5277 intranet.dev-interno.example Failed password for illegal user test 
+Sep 10 01:09:26 203.0.113.187:4844 nas.respaldo-mx.example Failed password for admin 
+Sep 10 01:13:28 192.0.2.144:6601 ci.dev-interno.example Failed password for illegal user test 
+Sep 10 01:28:02 198.51.100.6:5438 web.almacen-norte.example Failed password for admin 
+Sep 10 01:33:21 203.0.113.126:4068 print.almacen-norte.example Failed password for illegal user guest 
+Sep 10 01:35:29 198.51.100.242:6631 print.almacen-norte.example Accepted password for user svc-upd 
+Sep 10 01:48:34 192.0.2.33:4120 intranet.dev-interno.example Failed password for root 
+Sep 10 01:59:23 203.0.113.20:4999 db.nube-sur.example Failed password for illegal user guest 
+Sep 10 02:07:37 203.0.113.20:4744 mail.nube-sur.example Failed password for root 
+Sep 10 02:19:42 192.0.2.108:4511 nas.respaldo-mx.example Failed password for illegal user test 
+Sep 10 02:21:28 203.0.113.227:6820 git.dev-interno.example Failed password for admin 
+Sep 10 02:21:35 198.51.100.8:4863 db.nube-sur.example Failed password for admin 
+Sep 10 02:32:21 203.0.113.134:4074 print.almacen-norte.example Accepted password for user svc-upd 
+Sep 10 02:47:13 203.0.113.127:5696 wiki.dev-interno.example Failed password for illegal user test 
+Sep 10 03:02:52 203.0.113.140:5636 intranet.dev-interno.example Failed password for admin 
+Sep 10 03:20:37 192.0.2.34:5815 print.almacen-norte.example Accepted password for user svc-upd 
+Sep 10 03:48:48 203.0.113.140:5347 intranet.dev-interno.example Failed password for illegal user guest 
+Sep 10 03:49:05 198.51.100.170:5699 print.almacen-norte.example Failed password for root 
+Sep 10 03:56:25 192.0.2.205:4044 mail.nube-sur.example Failed password for illegal user guest 
+Sep 10 04:07:16 203.0.113.227:4336 git.dev-interno.example Failed password for admin 
+Sep 10 04:08:20 198.51.100.170:4974 web.almacen-norte.example Illegal user 
+Sep 10 04:14:10 198.51.100.163:4382 db.nube-sur.example Illegal user 
+Sep 10 04:21:31 192.0.2.166:5541 print.almacen-norte.example Failed password for root 
+Sep 10 04:23:20 203.0.113.53:6777 git.dev-interno.example Failed password for illegal user test 
+Sep 10 04:46:07 198.51.100.170:4341 web.nube-sur.example Failed password for admin 
+Sep 10 04:46:43 192.0.2.154:6263 print.almacen-norte.example Accepted password for user svc-upd 
+Sep 10 04:53:03 198.51.100.181:4412 git.dev-interno.example Failed password for root 
+Sep 10 05:09:39 192.0.2.157:5697 ftp.almacen-norte.example Failed password for illegal user test 
+Sep 10 05:10:16 203.0.113.47:6087 nas.respaldo-mx.example Failed password for root 
+Sep 10 05:16:38 203.0.113.20:5440 intranet.dev-interno.example Failed password for illegal user test 
+Sep 10 05:24:58 203.0.113.136:4103 print.almacen-norte.example Accepted password for user svc-upd 
+Sep 10 05:36:42 203.0.113.227:5737 git.dev-interno.example Failed password for illegal user test 
+Sep 10 05:45:23 192.0.2.166:6207 vpn.nube-sur.example Failed password for root 
+Sep 10 05:48:56 198.51.100.178:6348 intranet.dev-interno.example Illegal user 
+Sep 10 05:54:31 203.0.113.190:6708 intranet.dev-interno.example Failed password for root 
+Sep 10 05:59:32 192.0.2.166:4045 print.almacen-norte.example Failed password for illegal user guest 
+Sep 10 06:08:27 192.0.2.159:5564 ci.dev-interno.example Failed password for root 
+Sep 10 06:22:35 198.51.100.66:5303 web.nube-sur.example Failed password for admin 
+Sep 10 06:52:52 198.51.100.107:4365 intranet.dev-interno.example Failed password for illegal user test 
+Sep 10 07:02:53 198.51.100.163:4162 db.nube-sur.example Failed password for illegal user test 
+Sep 10 07:12:09 192.0.2.156:6533 auth.nube-sur.example Illegal user 
+Sep 10 07:55:19 203.0.113.227:4253 mail.nube-sur.example Failed password for admin 
+Sep 10 08:03:23 192.0.2.17:4648 wiki.dev-interno.example Accepted password for user jlopez 
+Sep 10 08:06:54 203.0.113.24:6893 web.almacen-norte.example Illegal user 
+Sep 10 08:07:01 192.0.2.19:5034 git.dev-interno.example Accepted password for user mhernandez 
+Sep 10 08:16:50 192.0.2.143:5417 vpn.nube-sur.example Failed password for admin 
+Sep 10 08:29:25 203.0.113.143:6747 vpn.nube-sur.example Failed password for illegal user guest 
+Sep 10 08:31:39 192.0.2.19:4069 web.nube-sur.example Accepted password for user jlopez 
+Sep 10 08:58:03 192.0.2.13:6634 wiki.dev-interno.example Accepted password for user efuentes 
+Sep 10 09:01:11 192.0.2.12:6198 wiki.dev-interno.example Failed password for user rgarcia 
+Sep 10 10:16:46 192.0.2.14:6193 git.dev-interno.example Accepted password for user mhernandez 
+Sep 10 10:35:39 192.0.2.143:6729 vpn.nube-sur.example Failed password for illegal user test 
+Sep 10 10:46:31 203.0.113.35:6060 print.almacen-norte.example Accepted password for user svc-upd 
+Sep 10 11:01:10 192.0.2.10:6877 wiki.dev-interno.example Accepted password for user dpineda 
+Sep 10 11:16:07 192.0.2.166:6601 print.almacen-norte.example Failed password for root 
+Sep 10 11:22:53 192.0.2.157:4212 ftp.almacen-norte.example Illegal user 
+Sep 10 11:48:05 192.0.2.18:6488 web.nube-sur.example Accepted password for user amtorres 
+Sep 10 11:49:03 192.0.2.1:5111 auth.nube-sur.example Failed password for admin 
+Sep 10 12:16:08 192.0.2.194:6817 print.almacen-norte.example Accepted password for user svc-upd 
+Sep 10 12:30:01 192.0.2.14:5220 wiki.dev-interno.example Accepted password for user efuentes 
+Sep 10 12:57:27 192.0.2.14:4067 git.dev-interno.example Accepted password for user rgarcia 
+Sep 10 13:15:45 203.0.113.210:4069 print.almacen-norte.example Accepted password for user svc-upd 
+Sep 10 13:24:51 192.0.2.14:5086 git.dev-interno.example Accepted password for user amtorres 
+Sep 10 13:26:57 198.51.100.2:4677 ci.dev-interno.example Failed password for illegal user guest 
+Sep 10 13:44:04 192.0.2.136:5827 print.almacen-norte.example Accepted password for user svc-upd 
+Sep 10 14:22:38 192.0.2.21:6252 git.dev-interno.example Accepted password for user dpineda 
+Sep 10 15:04:48 198.51.100.117:5800 db.nube-sur.example Failed password for admin 
+Sep 10 15:05:34 192.0.2.13:4810 wiki.dev-interno.example Accepted password for user amtorres 
+Sep 10 15:11:41 192.0.2.17:5122 wiki.dev-interno.example Accepted password for user lsalazar 
+Sep 10 15:24:04 192.0.2.93:4724 print.almacen-norte.example Failed password for root 
+Sep 10 15:32:34 203.0.113.227:4065 mail.nube-sur.example Failed password for root 
+Sep 10 15:40:09 198.51.100.163:4951 db.nube-sur.example Illegal user 
+Sep 10 16:03:13 192.0.2.186:4665 print.almacen-norte.example Failed password for illegal user test 
+Sep 10 16:03:22 203.0.113.140:6679 auth.nube-sur.example Illegal user 
+Sep 10 16:40:26 192.0.2.110:4410 git.dev-interno.example Failed password for root 
+Sep 10 17:03:55 192.0.2.58:4634 ftp.almacen-norte.example Failed password for illegal user test 
+Sep 10 17:32:16 192.0.2.16:6136 git.dev-interno.example Accepted password for user lsalazar 
+Sep 10 17:40:49 203.0.113.140:6112 intranet.dev-interno.example Failed password for admin 
+Sep 10 17:41:52 203.0.113.227:6309 git.dev-interno.example Failed password for root 
+Sep 10 17:42:02 203.0.113.24:4005 auth.almacen-norte.example Failed password for illegal user test 
+Sep 10 17:44:18 192.0.2.20:5303 web.nube-sur.example Accepted password for user jlopez 
+Sep 10 17:59:02 192.0.2.20:5371 web.nube-sur.example Accepted password for user mhernandez 
+Sep 10 18:10:34 203.0.113.140:5699 intranet.dev-interno.example Failed password for illegal user test 
+Sep 10 18:16:08 198.51.100.170:5557 db.nube-sur.example Failed password for admin 
+Sep 10 18:24:00 203.0.113.24:4648 auth.almacen-norte.example Illegal user 
+Sep 10 18:49:57 203.0.113.169:4479 print.almacen-norte.example Accepted password for user svc-upd 
+Sep 10 18:54:41 192.0.2.254:6239 db.nube-sur.example Failed password for admin 
+Sep 10 19:25:17 203.0.113.227:5513 git.dev-interno.example Failed password for root 
+Sep 10 19:40:36 198.51.100.167:4093 print.almacen-norte.example Accepted password for user svc-upd 
+Sep 10 20:13:41 203.0.113.227:5444 mail.nube-sur.example Failed password for illegal user guest 
+Sep 10 22:05:23 198.51.100.2:4901 ci.dev-interno.example Illegal user 
+Sep 10 22:30:34 198.51.100.117:4435 db.nube-sur.example Illegal user 
+Sep 10 22:33:25 192.0.2.50:6010 auth.almacen-norte.example Failed password for illegal user test 
+Sep 10 22:37:30 203.0.113.159:5800 ci.dev-interno.example Failed password for illegal user test 
+Sep 10 22:47:36 203.0.113.254:5921 print.almacen-norte.example Failed password for illegal user guest 
+Sep 10 22:58:33 203.0.113.34:4642 print.almacen-norte.example Accepted password for user svc-upd 
+Sep 10 22:59:07 198.51.100.149:5179 print.almacen-norte.example Accepted password for user svc-upd 
+Sep 10 23:04:02 203.0.113.141:5006 print.almacen-norte.example Accepted password for user svc-upd 
+Sep 10 23:05:57 192.0.2.139:4808 print.almacen-norte.example Failed password for admin 
+Sep 10 23:18:05 198.51.100.84:6703 print.almacen-norte.example Accepted password for user svc-upd 
+Sep 10 23:23:21 198.51.100.66:5612 ftp.almacen-norte.example Illegal user 
+Sep 10 23:26:28 192.0.2.89:5357 print.almacen-norte.example Accepted password for user svc-upd 
+Sep 10 23:36:33 203.0.113.140:4773 intranet.dev-interno.example Illegal user 
+Sep 10 23:49:01 192.0.2.57:5465 git.dev-interno.example Failed password for root 
+Sep 10 23:49:43 203.0.113.245:5961 mail.nube-sur.example Failed password for illegal user test 
+Sep 10 23:54:22 203.0.113.17:4412 web.nube-sur.example Failed password for illegal user test 
