@@ -147,8 +147,8 @@ void merge(std::vector<T>& v, int l, int mid, int r, Criteria sortingCriteria) {
  * @param v The vector to save into the file, Logs vector.
  */
 template <typename T>
-void saveSortedLogs(const std::vector<T>& v) {
-    std::ofstream orderedFile("orderedLogs.txt");
+void saveSortedLogs(const std::vector<T>& v, const std::string outputFileName) {
+    std::ofstream orderedFile(outputFileName);
     if (orderedFile.is_open()) {
         for (Log* log : v) {
             orderedFile << *log;
@@ -352,13 +352,17 @@ void printUserRange(const std::vector<T>& logsVect, Criteria printCriteria) {
 
             auto [startIdx, endIdx] = binarySearch(logsVect, startTime, endTime, Criteria::DATE);
             if (startIdx != -1) {
+                std::vector<Log*> rangeDateVector = {};
                 for (int i = startIdx; i <= endIdx; i++) {
+                    rangeDateVector.push_back(logsVect[i]);
                     std::cout << *logsVect[i];
                 }
+                saveSortedLogs(rangeDateVector, "orderedLogsbyRangedDate.txt");
             }
             else {
                 std::cout << "No logs found for the given range. \n";
             }
+
             // Releases memory from the heap
             for (Log* log : logsVect) {
                 delete log;
@@ -379,9 +383,12 @@ void printUserRange(const std::vector<T>& logsVect, Criteria printCriteria) {
 
             auto [startIdx2, endIdx2] = binarySearch(logsVect, totalStartIp, totalEndIp, Criteria::IP);
             if (startIdx2 != -1) {
+                std::vector<Log*> rangeIpVector = {};
                 for (int i = startIdx2; i <= endIdx2; i++) {
+                    rangeIpVector.push_back(logsVect[i]);
                     std::cout << *logsVect[i];
                 }
+                saveSortedLogs(rangeIpVector, "orderedLogsbyRangedIp.txt");
             }
             else {
                 std::cout << "No logs found for the given range. \n";
@@ -409,14 +416,11 @@ int main(int argc, char* argv[]) {
         return 1;
     }
     int option = 0;
-    // Get logsVector
-    std::vector<Log*> logsVector = getVector(argv[1]);
-
     do {
         std::cout << "\nSelect an option: " << "\n"
-        << "1. search by date" << "\n"
-        << "2. search by ip" << "\n"
-        << "3. exit" << "\n";
+        << "1. Search by date" << "\n"
+        << "2. Search by IP" << "\n"
+        << "3. Exit" << "\n";
         std::cin >> option;
 
         if (option == 1) {
@@ -424,18 +428,18 @@ int main(int argc, char* argv[]) {
             // Order the logsVector
             mergeSort(logsVector , 0, static_cast<int>(logsVector.size()) - 1, Criteria::DATE);
             // Save the sorted logs into an output file named orderedLogs.txt
-            saveSortedLogs(logsVector);
+            saveSortedLogs(logsVector, "orderedLogsByData.txt");
             // Prompts for a date range and prints if it's found
             printUserRange(logsVector, Criteria::DATE);
         } else if (option == 2) {
             std::vector<Log*> logsVector = getVector(argv[1]);
             mergeSort(logsVector, 0, static_cast<int>(logsVector.size()) - 1, Criteria::IP);
-            saveSortedLogs(logsVector);
+            saveSortedLogs(logsVector, "orderedLogsByIP.txt");
             printUserRange(logsVector, Criteria::IP);
         } else if(option == 3) {
             std::cout << "I'll be back";
         } else {
-            std::cout << "option not valid";
+            std::cout << "Invalid option\n";
         }
 
     } while(option != 3);
