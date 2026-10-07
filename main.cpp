@@ -2,6 +2,7 @@
 it orders the logs from the earliest to the latest date and prompts the user for a date range (e.g. Sep 10 to Sep 15). The program will determine
 if there are any logs for the given range, prints them into the console, and creates an output file named "orderedLogs.txt" containing the logs inside
 the provided range.
+// Compilation string (masaru): g++ main.cpp -o main.exe; ./main.exe bitacora.txt  
 
 Authors: A01648241
          A01642638
@@ -16,6 +17,7 @@ Date: 11/09/2026
 #include <string>
 #include <vector>
 #include <unordered_map>
+#include <iomanip>
 
 /**
  * @class Log
@@ -23,16 +25,16 @@ Date: 11/09/2026
  */
 class Log {
 private:
-    std::string month;
-    double doubleMonth;
-    double day;
-    double hour;
-    double min;
-    double sec;
-    double totalTime;
-    std::string ip;
-    std::string host;
-    std::string message;
+    std::string month = "";
+    double doubleMonth = 0;
+    double day = 0;
+    double hour = 0;
+    double min = 0;
+    double sec = 0;
+    double totalTime = 0;
+    std::string ip = "";
+    std::string host = "";
+    std::string message = "";
 
 public:
     Log(std::string month, double doubleMonth, double day, double hour, double min, double sec, double totalTime,
@@ -49,10 +51,10 @@ public:
      */
     friend std::ostream& operator<<(std::ostream& os, const Log& log) {
         os << log.getMonth() << " "
-            << log.getDay() << " "
-            << log.getHour() << ":"
-            << log.getMin() << ":"
-            << log.getSec() << " "
+            << std::setfill('0') << std::setw(2) << static_cast<int>(log.getDay()) << " "
+            << std::setfill('0') << std::setw(2) << static_cast<int>(log.getHour()) << ":"
+            << std::setfill('0') << std::setw(2) << static_cast<int>(log.getMin()) << ":"
+            << std::setfill('0') << std::setw(2) << static_cast<int>(log.getSec()) << " "
             << log.getIp() << " "
             << log.getHost() << " "
             << log.getMessage() << " "
@@ -268,8 +270,8 @@ std::vector<Log*> getVector(const std::string& file_name) {
 
 template <typename T>
 void printUserRange(const std::vector<T>& logsVect) {
-    std::string startMonth, endMonth;
-    int startDay, endDay;
+    std::string startMonth = "", endMonth = "";
+    int startDay = 0, endDay = 0;
 
     std::cout << "Enter start month (e.g. Sep) and day (e.g. 10): ";
     std::cin >> startMonth >> startDay;
