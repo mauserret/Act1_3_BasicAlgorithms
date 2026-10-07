@@ -18,6 +18,7 @@ Date: 11/09/2026
 #include <vector>
 #include <unordered_map>
 #include <iomanip>
+#include <cmath>
 
 /**
  * @class Log
@@ -32,15 +33,17 @@ private:
     double min = 0;
     double sec = 0;
     double totalTime = 0;
+    long long numericIp = 0;
     std::string ip = "";
     std::string host = "";
     std::string message = "";
 
 public:
+
     Log(std::string month, double doubleMonth, double day, double hour, double min, double sec, double totalTime,
-        std::string ip, std::string host, std::string message) :
+        std::string ip, long long numericIp, std::string host, std::string message) :
         month{ month }, doubleMonth{ doubleMonth }, day{ day }, hour{ hour }, min{ min }, sec{ sec }, totalTime{ totalTime },
-        ip{ ip }, host{ host }, message{ message } {
+        ip{ ip }, numericIp{ numericIp }, host{ host }, message{ message } {
     }
 
     /**
@@ -69,10 +72,15 @@ public:
     double getSec() const { return sec; }
     double getTotalTime() const { return totalTime; }
     std::string getIp() const { return ip; }
+    long long getNumericIp() const {return numericIp; }
     std::string getHost() const { return host; }
     std::string getMessage() const { return message; }
 };
 
+enum class Criteria {
+    DATE, 
+    IP,
+};
 /**
  * @brief Sorts a vector with the merge sort algorithm by using recursion to divide and conquer; uses the merge() function.
  *
@@ -81,12 +89,12 @@ public:
  * @param r Ending index of the range to sort.
  */
 template <typename T>
-void mergeSort(std::vector<T>& v, int l, int r) {
+void mergeSort(std::vector<T>& v, int l, int r, Criteria sortingCriteria) {
     if (l >= r) return;
     int mid = l + (r - l) / 2;
-    mergeSort(v, l, mid);
-    mergeSort(v, mid + 1, r);
-    merge(v, l, mid, r);
+    mergeSort(v, l, mid, sortingCriteria);
+    mergeSort(v, mid + 1, r, sortingCriteria);
+    merge(v, l, mid, r, sortingCriteria);
 }
 
 /**
@@ -98,14 +106,26 @@ void mergeSort(std::vector<T>& v, int l, int r) {
  * @param r Ending index of the right subarray.
  */
 template <typename T>
-void merge(std::vector<T>& v, int l, int mid, int r) {
+void merge(std::vector<T>& v, int l, int mid, int r, Criteria sortingCriteria) {
     std::vector<T> temp(r - l + 1);
     int i = l;
     int j = mid + 1;
     int k = 0;
 
     while (i <= mid && j <= r) {
-        if (v[i]->getTotalTime() <= v[j]->getTotalTime()) {
+        bool condition = false;
+        switch (sortingCriteria) {
+            case Criteria::DATE : {
+                condition = (v[i]->getTotalTime() <= v[j]->getTotalTime());
+                break;
+            }
+            case Criteria::IP : {
+                condition = (v[i]->getNumericIp() <= v[j]->getNumericIp());
+                break;
+            }
+        }
+
+        if (condition) {
             temp[k++] = v[i++];
         }
         else {
@@ -148,16 +168,26 @@ void saveSortedLogs(const std::vector<T>& v) {
  * @return std::pair<int, int> Pair containing the first and last indexes found. 
  */
 template <typename T>
-std::pair<int, int> binarySearch(const std::vector<T>& v, double start, double end) {
+std::pair<int, int> binarySearch(const std::vector<T>& v, double start, double end, Criteria searchCriteria) {
     int startIndex = -1;
     int endIndex = -1;
 
     int l = 0;
     int r = v.size() - 1;
-
     while (l <= r) {
+        bool condition = false;
         int m = l + (r - l) / 2;
-        if (v[m]->getTotalTime() >= start) {
+        switch (searchCriteria) {
+            case Criteria::DATE : {
+                condition = (v[m]->getTotalTime() >= start);
+                break;
+            }
+            case Criteria::IP : {
+                condition = (v[m]->getNumericIp() >= start);
+                break;
+            }
+        }
+        if (condition) {
             startIndex = m;
             r = m - 1;
         }
@@ -170,8 +200,19 @@ std::pair<int, int> binarySearch(const std::vector<T>& v, double start, double e
     r = v.size() - 1;
 
     while (l <= r) {
+        bool condition = 0;
         int m = l + (r - l) / 2;
-        if (v[m]->getTotalTime() <= end) {
+        switch (searchCriteria) {
+            case Criteria::DATE : {
+                condition = (v[m]->getTotalTime() <= end);
+                break;
+            }
+            case Criteria::IP : {
+                condition = (v[m]->getNumericIp() <= end);
+                break;
+            }
+        }
+        if (condition) {
             endIndex = m;
             l = m + 1;
         }
@@ -224,6 +265,31 @@ double getTotalTime(const double& month, const double& day, const double& hour, 
     return (month + day) * 24 + hour + min / 60 + sec / 3600.0;
 }
 
+long long getTotalIp (const std::string& ip) {
+    // 192.0.2.10:
+    std::string strIp1 = "";
+    std::string strIp2 = "";
+    std:: string strIp3 = "";
+    std::string strIp4 = "";
+    int ip1 = 0;
+    int ip2 = 0;
+    int ip3 = 0;
+    int ip4 = 0;
+
+    std::stringstream ss(ip);
+    getline(ss, strIp1, '.');
+    getline(ss, strIp2, '.');
+    getline(ss, strIp3, '.');
+    getline(ss, strIp4, ':');
+
+    ip1 = stoi(strIp1);
+    ip2 = stoi(strIp2);
+    ip3 = stoi(strIp3);
+    ip4 = stoi(strIp4);
+
+    return ip1*pow(255, 3) + ip2*pow(255, 2) + ip3*255 + ip4;
+}
+
 /** 
 * @brief Reads the input file, stores the logs in a vector, sorts them, 
 * saved them inside an output file and searches for a user-provided date range.
@@ -242,8 +308,8 @@ std::vector<Log*> getVector(const std::string& file_name) {
     std::string line;
     while (getline(file, line)) {
         std::stringstream ss(line);
-        std::string month, strDay, strHour, strMin, strSec, ip, host, msg;
-        double day, hour, min, sec;
+        std::string month = "", strDay = "", strHour = "", strMin = "", strSec = "", ip = "", host = "", msg = "";
+        double day = 0, hour = 0, min = 0, sec = 0;
 
         getline(ss, month, ' ');
         getline(ss, strDay, ' ');
@@ -260,8 +326,8 @@ std::vector<Log*> getVector(const std::string& file_name) {
         sec = stoi(strSec);
         double integerMonth = monthToInt(month);
         double totTime = getTotalTime(integerMonth, day, hour, min, sec);
-
-        Log* log = new Log(month, integerMonth, day, hour, min, sec, totTime, ip, host, msg);
+        long long totIp = getTotalIp(ip);
+        Log* log = new Log(month, integerMonth, day, hour, min, sec, totTime, ip, totIp, host, msg);
         logs.push_back(log);
     }
     file.close();
@@ -269,32 +335,66 @@ std::vector<Log*> getVector(const std::string& file_name) {
 }
 
 template <typename T>
-void printUserRange(const std::vector<T>& logsVect) {
-    std::string startMonth = "", endMonth = "";
-    int startDay = 0, endDay = 0;
+void printUserRange(const std::vector<T>& logsVect, Criteria printCriteria) {
+    switch (printCriteria) {
+        case Criteria::DATE : {
+            std::string startMonth = "", endMonth = "";
+            int startDay = 0, endDay = 0;
 
-    std::cout << "Enter start month (e.g. Sep) and day (e.g. 10): ";
-    std::cin >> startMonth >> startDay;
+            std::cout << "Enter start month (e.g. Sep) and day (e.g. 10): ";
+            std::cin >> startMonth >> startDay;
 
-    std::cout << "Enter end month (e.g. Sep) and day (e.g. 10): ";
-    std::cin >> endMonth >> endDay;
+            std::cout << "Enter end month (e.g. Sep) and day (e.g. 10): ";
+            std::cin >> endMonth >> endDay;
 
-    double startTime = getTotalTime(monthToInt(startMonth), startDay, 0, 0, 0);
-    double endTime = getTotalTime(monthToInt(endMonth), endDay, 23, 59, 59);
+            double startTime = getTotalTime(monthToInt(startMonth), startDay, 0, 0, 0);
+            double endTime = getTotalTime(monthToInt(endMonth), endDay, 23, 59, 59);
 
-    auto [startIdx, endIdx] = binarySearch(logsVect, startTime, endTime);
-    if (startIdx != -1) {
-        for (int i = startIdx; i <= endIdx; i++) {
-            std::cout << *logsVect[i];
+            auto [startIdx, endIdx] = binarySearch(logsVect, startTime, endTime, Criteria::DATE);
+            if (startIdx != -1) {
+                for (int i = startIdx; i <= endIdx; i++) {
+                    std::cout << *logsVect[i];
+                }
+            }
+            else {
+                std::cout << "No logs found for the given range. \n";
+            }
+            // Releases memory from the heap
+            for (Log* log : logsVect) {
+                delete log;
+            }
+            break;
         }
-    }
-    else {
-        std::cout << "No logs found for the given range. \n";
-    }
-    // Releases memory from the heap
-    for (Log* log : logsVect) {
-        delete log;
-    }
+        case Criteria::IP : {
+            std::string startIp = "", endIp = "";
+            
+            std::cout << "Enter start IP (Ej. 192.0.2.10:0000): ";
+            std::cin >> startIp;
+
+            std::cout << "Enter end IP (Ej. 192.0.2.11:0000): ";
+            std::cin >> endIp;
+
+            long long totalStartIp = getTotalIp(startIp);
+            long long totalEndIp = getTotalIp(endIp);
+
+            auto [startIdx2, endIdx2] = binarySearch(logsVect, totalStartIp, totalEndIp, Criteria::IP);
+            if (startIdx2 != -1) {
+                for (int i = startIdx2; i <= endIdx2; i++) {
+                    std::cout << *logsVect[i];
+                }
+            }
+            else {
+                std::cout << "No logs found for the given range. \n";
+            }
+            // Releases memory from the heap
+            for (Log* log : logsVect) {
+                delete log;
+            }
+
+            break;
+        }
+
+    } 
 }
 
 /**
@@ -308,15 +408,37 @@ int main(int argc, char* argv[]) {
         std::cout << "Usage: ./main <input_file>\n";
         return 1;
     }
+    int option = 0;
     // Get logsVector
     std::vector<Log*> logsVector = getVector(argv[1]);
 
-    // Order the logsVector
-    mergeSort(logsVector , 0, logsVector.size() - 1);
-    // Save the sorted logs into an output file named orderedLogs.txt
-    saveSortedLogs(logsVector);
-    // Prompts for a date range and prints if it's found
-    printUserRange(logsVector);
+    do {
+        std::cout << "\nSelect an option: " << "\n"
+        << "1. search by date" << "\n"
+        << "2. search by ip" << "\n"
+        << "3. exit" << "\n";
+        std::cin >> option;
+
+        if (option == 1) {
+            std::vector<Log*> logsVector = getVector(argv[1]);
+            // Order the logsVector
+            mergeSort(logsVector , 0, static_cast<int>(logsVector.size()) - 1, Criteria::DATE);
+            // Save the sorted logs into an output file named orderedLogs.txt
+            saveSortedLogs(logsVector);
+            // Prompts for a date range and prints if it's found
+            printUserRange(logsVector, Criteria::DATE);
+        } else if (option == 2) {
+            std::vector<Log*> logsVector = getVector(argv[1]);
+            mergeSort(logsVector, 0, static_cast<int>(logsVector.size()) - 1, Criteria::IP);
+            saveSortedLogs(logsVector);
+            printUserRange(logsVector, Criteria::IP);
+        } else if(option == 3) {
+            std::cout << "I'll be back";
+        } else {
+            std::cout << "option not valid";
+        }
+
+    } while(option != 3);
 
     return 0;
 }
