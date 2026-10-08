@@ -19,6 +19,7 @@ Date: 11/09/2026
 #include <unordered_map>
 #include <iomanip>
 #include <cmath>
+#include <stdexcept>
 
 /**
  * @class Log
@@ -233,7 +234,7 @@ std::pair<int, int> binarySearch(const std::vector<T>& v, double start, double e
 * @param m Reference to the string containing the month abbreviation. 
 * @return int Numeric value associated with the month. 
 */
-int monthToInt(std::string& m) {
+int monthToInt(const std::string& m) {
     std::unordered_map<std::string, int> convert{
         {"Jan", 0},
         {"Feb", 31},
@@ -248,7 +249,13 @@ int monthToInt(std::string& m) {
         {"Nov", 304},
         {"Dec", 334},
     };
-    return convert[m];
+    auto it = convert.find(m);
+    // If the key is not presend in the HashMap it means the input was not a month in the format asked
+    if (it == convert.end()) {
+        throw std::invalid_argument("Invalid month input: " + m);
+    }
+    // .find() returns key and value, we return the value if the key is in the HashMap
+    return it->second; 
 }
 
 /** 
@@ -265,8 +272,28 @@ double getTotalTime(const double& month, const double& day, const double& hour, 
     return (month + day) * 24 + hour + min / 60 + sec / 3600.0;
 }
 
+int checkOctet(const std::string&ip) {
+    try
+    {
+        size_t octetSize = 0;
+        int ipOctet = stoi(ip, &octetSize);
+        if (octetSize != ip.size()) {
+            throw std::invalid_argument("Invalid octet IP: " + ip);
+        }
+        if (ipOctet < 0 || ipOctet > 255) {
+            throw std::invalid_argument("Invalid octet IP: " + ip);
+        } 
+        return ipOctet;
+    }
+    catch(const std::exception&)
+    {
+        throw std::invalid_argument("Invalid octet IP: " + ip);
+    }
+    
+}
+
 long long getTotalIp (const std::string& ip) {
-    // 192.0.2.10:
+
     std::string strIp1 = "";
     std::string strIp2 = "";
     std:: string strIp3 = "";
@@ -282,12 +309,36 @@ long long getTotalIp (const std::string& ip) {
     getline(ss, strIp3, '.');
     getline(ss, strIp4, ':');
 
-    ip1 = stoi(strIp1);
-    ip2 = stoi(strIp2);
-    ip3 = stoi(strIp3);
-    ip4 = stoi(strIp4);
+    ip1 = checkOctet(strIp1);
+    ip2 = checkOctet(strIp2);
+    ip3 = checkOctet(strIp3);
+    ip4 = checkOctet(strIp4);
 
-    return ip1*pow(255, 3) + ip2*pow(255, 2) + ip3*255 + ip4;
+    return ip1 * pow(256, 3) + ip2 * pow(256, 2) + ip3 * 256 + ip4;
+}
+
+int validateDay(const std::string day) {
+    try
+    {
+        size_t daySize = 0;
+        int intDay = stoi(day, &daySize);
+        if (daySize != day.size()) {
+            throw std::invalid_argument("Invalid day: " + day);
+        }
+        if (intDay < 1 || intDay > 31) {
+            throw std::invalid_argument("Invalid day: " + day);
+        } 
+        return intDay;
+    }
+    catch(const std::exception&)
+    {
+        throw std::invalid_argument("Invalid day: " + day);
+    }
+}
+
+template <typename T>
+bool validSearchRange(const T& startRange, const T& endRange) {
+    return endRange >= startRange;
 }
 
 /** 
@@ -338,17 +389,27 @@ template <typename T>
 void printUserRange(const std::vector<T>& logsVect, Criteria printCriteria) {
     switch (printCriteria) {
         case Criteria::DATE : {
-            std::string startMonth = "", endMonth = "";
-            int startDay = 0, endDay = 0;
+            std::string startMonthStr = "", endMonthStr = "", startDayStr = "", endDayStr = "";
+            int startMonthInt = 0, endMonthInt= 0, startDayInt = 0, endDayInt = 0;
 
             std::cout << "Enter start month (e.g. Sep) and day (e.g. 10): ";
-            std::cin >> startMonth >> startDay;
+            std::cin >> startMonthStr >> startDayStr;
+
+            startMonthInt = monthToInt(startMonthStr);
+            startDayInt = validateDay(startDayStr);
 
             std::cout << "Enter end month (e.g. Sep) and day (e.g. 10): ";
-            std::cin >> endMonth >> endDay;
+            std::cin >> endMonthStr >> endDayStr;
 
-            double startTime = getTotalTime(monthToInt(startMonth), startDay, 0, 0, 0);
-            double endTime = getTotalTime(monthToInt(endMonth), endDay, 23, 59, 59);
+            endMonthInt = monthToInt(endMonthStr);
+            endDayInt = validateDay(endDayStr);
+
+            double startTime = getTotalTime(startMonthInt, startDayInt, 0, 0, 0);
+            double endTime = getTotalTime(endMonthInt, endDayInt, 23, 59, 59);
+
+            if (!validSearchRange(startTime, endTime)) {
+                throw std::invalid_argument("Invalid range: " + startMonthStr + " " + startDayStr + " - " + endMonthStr + " " + endDayStr);
+            }
 
             auto [startIdx, endIdx] = binarySearch(logsVect, startTime, endTime, Criteria::DATE);
             if (startIdx != -1) {
@@ -362,11 +423,6 @@ void printUserRange(const std::vector<T>& logsVect, Criteria printCriteria) {
             else {
                 std::cout << "No logs found for the given range. \n";
             }
-
-            // Releases memory from the heap
-            for (Log* log : logsVect) {
-                delete log;
-            }
             break;
         }
         case Criteria::IP : {
@@ -375,11 +431,16 @@ void printUserRange(const std::vector<T>& logsVect, Criteria printCriteria) {
             std::cout << "Enter start IP (Ej. 192.0.2.10:0000): ";
             std::cin >> startIp;
 
+            long long totalStartIp = getTotalIp(startIp);
+
             std::cout << "Enter end IP (Ej. 192.0.2.11:0000): ";
             std::cin >> endIp;
 
-            long long totalStartIp = getTotalIp(startIp);
             long long totalEndIp = getTotalIp(endIp);
+
+            if (!validSearchRange(totalStartIp, totalEndIp)) {
+                throw std::invalid_argument("Invalid IP range: " + startIp + " - " + endIp);
+            }
 
             auto [startIdx2, endIdx2] = binarySearch(logsVect, totalStartIp, totalEndIp, Criteria::IP);
             if (startIdx2 != -1) {
@@ -393,14 +454,8 @@ void printUserRange(const std::vector<T>& logsVect, Criteria printCriteria) {
             else {
                 std::cout << "No logs found for the given range. \n";
             }
-            // Releases memory from the heap
-            for (Log* log : logsVect) {
-                delete log;
-            }
-
             break;
         }
-
     } 
 }
 
@@ -421,23 +476,49 @@ int main(int argc, char* argv[]) {
         << "1. Search by date" << "\n"
         << "2. Search by IP" << "\n"
         << "3. Exit" << "\n";
-        std::cin >> option;
 
+        if (!(std::cin >> option)) {
+            std::cin.clear();
+            std::cin.ignore(10000, '\n');
+            std::cout << "Invalid option\n";
+            continue;
+        }
         if (option == 1) {
             std::vector<Log*> logsVector = getVector(argv[1]);
             // Order the logsVector
             mergeSort(logsVector , 0, static_cast<int>(logsVector.size()) - 1, Criteria::DATE);
+
             // Save the sorted logs into an output file named orderedLogs.txt
             saveSortedLogs(logsVector, "orderedLogsByData.txt");
-            // Prompts for a date range and prints if it's found
-            printUserRange(logsVector, Criteria::DATE);
+            try {
+                // Prompts for a date range and prints if it's found
+                printUserRange(logsVector, Criteria::DATE);
+            } catch (const std::invalid_argument& e) {
+                std::cin.ignore(10000, '\n');
+                std::cerr << "Error: " << e.what() << '\n';
+            }
+            // Releases memory from the heap
+            for (Log* log : logsVector) {
+                    delete log;
+                }
+            
+
+
         } else if (option == 2) {
             std::vector<Log*> logsVector = getVector(argv[1]);
             mergeSort(logsVector, 0, static_cast<int>(logsVector.size()) - 1, Criteria::IP);
             saveSortedLogs(logsVector, "orderedLogsByIP.txt");
-            printUserRange(logsVector, Criteria::IP);
+                try {
+                    printUserRange(logsVector, Criteria::IP);
+                } catch (const std::invalid_argument& e) {
+                    std::cerr << "Error: " << e.what() << '\n';
+                }
+                // Releases memory from the heap
+                for (Log* log : logsVector) {
+                        delete log;
+                    }
         } else if(option == 3) {
-            std::cout << "I'll be back";
+            std::cout << "I'll be back\n";
         } else {
             std::cout << "Invalid option\n";
         }
