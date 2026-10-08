@@ -228,13 +228,24 @@ std::pair<int, int> binarySearch(const std::vector<T>& v, double start, double e
     return { startIndex, endIndex };
 }
 
+std::string normalizeMonth(std::string month) {
+    if (month.empty()) {
+        return "";
+    }
+    for (char &c : month) {
+        c = std::tolower(static_cast<unsigned char>(c));
+    } 
+    month[0] = std::toupper(static_cast<unsigned char>(month[0]));
+    return month;
+}
+
 /** 
 * @brief Converts a month abbreviation into a numeric value. 
 * 
 * @param m Reference to the string containing the month abbreviation. 
 * @return int Numeric value associated with the month. 
 */
-int monthToInt(const std::string& m) {
+int monthToInt(std::string& m) {
     std::unordered_map<std::string, int> convert{
         {"Jan", 0},
         {"Feb", 31},
@@ -249,7 +260,8 @@ int monthToInt(const std::string& m) {
         {"Nov", 304},
         {"Dec", 334},
     };
-    auto it = convert.find(m);
+    std::string normalizedMonth = normalizeMonth(m);
+    auto it = convert.find(normalizedMonth);
     // If the key is not presend in the HashMap it means the input was not a month in the format asked
     if (it == convert.end()) {
         throw std::invalid_argument("Invalid month input: " + m);
