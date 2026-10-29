@@ -28,10 +28,14 @@ public:
     AVL &operator=(const AVL &) = delete;
 
     // Each public method calls the private method with the same name, starting at root.
-    void insert(long long searchIp, int totSuccess, std::string strIp) { root = insert(root, searchIp, totSuccess, strIp); }
     int height() { return height(root); }
+    void insert(long long searchIp, int totSuccess, std::string strIp) { root = insert(root, searchIp, totSuccess, strIp); }
+    std::vector<AVLNode*> rangeQuery(long long ipRangeStart, long long ipRangeEnd, std::vector<AVLNode*>& v) { rangeQuery(root, ipRangeStart, ipRangeEnd, v); }
+    std::vector<AVLNode*> nMostAccessed(int n) { nMostAccessed(root, n); }
+
 private:
     AVLNode* root = nullptr;
+    int distinctIps = 0;
 
     int height(AVLNode* n) { return n == nullptr ? -1 : n->height; }
     int bf(AVLNode* n) { return height(n->right) - height(n->left); }
@@ -71,6 +75,7 @@ private:
 }
     AVLNode* insert(AVLNode* n, long long searchIp, int totSuccess, const std::string& strIp) {
         if (n == nullptr) {
+            distinctIps++;
             return new AVLNode{searchIp, strIp, 1, totSuccess, 0, nullptr, nullptr};
         }
         if (searchIp < n->ip) n->left = insert(n->left, searchIp, totSuccess, strIp);
@@ -83,16 +88,15 @@ private:
     }
 
     // O(log n + k), where k is the number of IPs in the range
-    void rangeQuery(AVLNode* node, long long ipRangeStart, long long ipRangeEnd) {
+    std::vector<AVLNode*> rangeQuery(AVLNode* node, long long ipRangeStart, long long ipRangeEnd, std::vector<AVLNode*>& v) {
         if (node == nullptr) return;
-        if (node->ip > ipRangeStart) rangeQuery(node->left, ipRangeStart, ipRangeEnd);
+        if (node->ip > ipRangeStart) rangeQuery(node->left, ipRangeStart, ipRangeEnd, v);
 
         if ((ipRangeStart <= node->ip) && (node->ip <= ipRangeEnd)) {
-            std::cout << node->strIp << " Total accesses: " << node->totalAccesses 
-            << " Successful accesses: " << node->totalSuccess << "\n";
+            v.push_back(node);
         }
 
-        if (node->ip < ipRangeEnd) rangeQuery(node->right, ipRangeStart, ipRangeEnd);
+        if (node->ip < ipRangeEnd) rangeQuery(node->right, ipRangeStart, ipRangeEnd, v);
     }
 
     // O(n * N) where n is the number of nodes in the tree and N is the limit (or top nodes wished to view).

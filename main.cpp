@@ -190,7 +190,8 @@ std::string normalizeMonth(std::string month) {
 * @return int Numeric value associated with the month. 
 */
 int monthToInt(std::string& m) {
-    std::unordered_map<std::string, int> convert{
+    // Declared as static const so it initializes only once on first execution
+    static const std::unordered_map<std::string, int> convert{
         {"Jan", 0},
         {"Feb", 31},
         {"Mar", 59},

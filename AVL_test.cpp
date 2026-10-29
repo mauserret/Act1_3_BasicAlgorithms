@@ -43,3 +43,5 @@ int main() {
     }
     return 0;
 }
+
+// AVL’s height never exceeds roughly 1.44 · log₂(n)
