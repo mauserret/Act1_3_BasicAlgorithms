@@ -446,7 +446,7 @@ int main(int argc, char* argv[]) {
             mergeSort(logsVector , 0, static_cast<int>(logsVector.size()) - 1, Criteria::DATE);
 
             // Save the sorted logs into an output file named orderedLogs.txt
-            saveSortedLogs(logsVector, "orderedLogsByData.txt");
+            saveSortedLogs(logsVector, "orderedLogsByDate.txt");
             try {
                 // Prompts for a date range and prints if it's found
                 printUserRange(logsVector, Criteria::DATE);

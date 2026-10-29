@@ -1,5 +1,4 @@
 #pragma once
-#include "Log.h"
 #include <algorithm>
 #include <iostream>
 #include <vector>
@@ -29,13 +28,25 @@ public:
 
     // Each public method calls the private method with the same name, starting at root.
     int height() { return height(root); }
-    void insert(long long searchIp, int totSuccess, std::string strIp) { root = insert(root, searchIp, totSuccess, strIp); }
-    std::vector<AVLNode*> rangeQuery(long long ipRangeStart, long long ipRangeEnd, std::vector<AVLNode*>& v) { rangeQuery(root, ipRangeStart, ipRangeEnd, v); }
-    std::vector<AVLNode*> nMostAccessed(int n) { nMostAccessed(root, n); }
+    void insert(long long searchIp, std::string strIp, int totSuccess) { 
+        root = insert(root, searchIp, strIp, totSuccess);
+        ++totalRecorded; }
+    int getDistinctIps() const { return distinctIps; }
+    int getTotalRecorded() const { return totalRecorded; }
+
+    void rangeQuery(long long ipRangeStart, long long ipRangeEnd) {
+        int distinct = 0;
+        long long totalAccesses = 0;
+        rangeQuery(root, ipRangeStart, ipRangeEnd, distinct, totalAccesses);
+        std::cout << "Distinct IPs: " << distinct << "\n"
+                  << "Total accesses: " << totalAccesses << "\n";
+     }
+    std::vector<AVLNode*> nMostAccessed(int n) { return nMostAccessed(root, n); }
 
 private:
     AVLNode* root = nullptr;
     int distinctIps = 0;
+    int totalRecorded = 0;
 
     int height(AVLNode* n) { return n == nullptr ? -1 : n->height; }
     int bf(AVLNode* n) { return height(n->right) - height(n->left); }
@@ -73,13 +84,13 @@ private:
     }
     return n;
 }
-    AVLNode* insert(AVLNode* n, long long searchIp, int totSuccess, const std::string& strIp) {
+    AVLNode* insert(AVLNode* n, long long searchIp, const std::string& strIp, int totSuccess) {
         if (n == nullptr) {
             distinctIps++;
             return new AVLNode{searchIp, strIp, 1, totSuccess, 0, nullptr, nullptr};
         }
-        if (searchIp < n->ip) n->left = insert(n->left, searchIp, totSuccess, strIp);
-        if (searchIp > n->ip) n->right = insert(n->right, searchIp, totSuccess, strIp);
+        if (searchIp < n->ip) n->left = insert(n->left, searchIp, strIp, totSuccess);
+        if (searchIp > n->ip) n->right = insert(n->right, searchIp, strIp, totSuccess);
         if (searchIp == n->ip) {
             n->totalAccesses += 1;
             n->totalSuccess += totSuccess;
@@ -88,15 +99,19 @@ private:
     }
 
     // O(log n + k), where k is the number of IPs in the range
-    std::vector<AVLNode*> rangeQuery(AVLNode* node, long long ipRangeStart, long long ipRangeEnd, std::vector<AVLNode*>& v) {
+    void rangeQuery(AVLNode* node, long long ipRangeStart, long long ipRangeEnd,
+                    int& distinctInRange, long long& accessesInRange) {
         if (node == nullptr) return;
-        if (node->ip > ipRangeStart) rangeQuery(node->left, ipRangeStart, ipRangeEnd, v);
+        if (node->ip > ipRangeStart) rangeQuery(node->left, ipRangeStart, ipRangeEnd, distinctInRange, accessesInRange);
 
         if ((ipRangeStart <= node->ip) && (node->ip <= ipRangeEnd)) {
-            v.push_back(node);
+            std::cout << node->strIp << " | Accesses: " << node->totalAccesses <<  "\n";
+            ++distinctInRange;
+            accessesInRange += node->totalAccesses;
         }
 
-        if (node->ip < ipRangeEnd) rangeQuery(node->right, ipRangeStart, ipRangeEnd, v);
+        if (node->ip < ipRangeEnd) 
+            rangeQuery(node->right, ipRangeStart, ipRangeEnd, distinctInRange, accessesInRange);
     }
 
     // O(n * N) where n is the number of nodes in the tree and N is the limit (or top nodes wished to view).
