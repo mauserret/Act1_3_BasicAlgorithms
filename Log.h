@@ -1,5 +1,7 @@
+#pragma once
 #include <string>
-
+#include <iostream> 
+#include <iomanip>
 /**
  * @class Log
  * @brief Represents a single server log entry containing timestamps, ip address, host, and message.

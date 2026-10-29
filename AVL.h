@@ -1,6 +1,10 @@
 #pragma once
 #include "Log.h"
 #include <algorithm>
+#include <iostream>
+#include <vector>
+#include <string>
+#include<cstddef>
 
 struct AVLNode
 {
@@ -24,7 +28,7 @@ public:
     AVL &operator=(const AVL &) = delete;
 
     // Each public method calls the private method with the same name, starting at root.
-    void insert(long long seachIp, int totSuccess, std::string strIp) { root = insert(root, seachIp, totSuccess, strIp); }
+    void insert(long long searchIp, int totSuccess, std::string strIp) { root = insert(root, searchIp, totSuccess, strIp); }
     int height() { return height(root); }
 private:
     AVLNode* root = nullptr;
@@ -58,20 +62,23 @@ private:
             n->right = rotateRight(n->right);
         return rotateLeft(n);
     }
-    else if (bf(n) == -2) {
-        if (bf(n->left) < 0) n->left = rotateLeft(n->right);
+    if (bf(n) == -2) {
+        if (bf(n->left) > 0) 
+            n->left = rotateLeft(n->left);
         return rotateRight(n);
     }
     return n;
 }
-    AVLNode* insert(AVLNode* n, long long searchIp, int totSuccess, std::string strIp) {
+    AVLNode* insert(AVLNode* n, long long searchIp, int totSuccess, const std::string& strIp) {
         if (n == nullptr) {
             return new AVLNode{searchIp, strIp, 1, totSuccess, 0, nullptr, nullptr};
         }
         if (searchIp < n->ip) n->left = insert(n->left, searchIp, totSuccess, strIp);
         if (searchIp > n->ip) n->right = insert(n->right, searchIp, totSuccess, strIp);
-        n->totalAccesses += 1;
-        n->totalSuccess += totSuccess;
+        if (searchIp == n->ip) {
+            n->totalAccesses += 1;
+            n->totalSuccess += totSuccess;
+        }   
         return rebalance(n);
     }
 
@@ -88,8 +95,34 @@ private:
         if (node->ip < ipRangeEnd) rangeQuery(node->right, ipRangeStart, ipRangeEnd);
     }
 
-    void nMostAccessed(AVLNode* node, int n) {
-        // TODO
+    // O(n * N) where n is the number of nodes in the tree and N is the limit (or top nodes wished to view).
+    // its linear in the number of distinct IP's because N is fixed.
+    // Space complexity of O(N) for the board plus O(log(n)) for the recursion stack 
+    void collectTop(AVLNode* node, std::size_t limit, std::vector<AVLNode*>& board) {
+        if (node == nullptr) return;
+        collectTop(node->left, limit, board);
+
+        bool full = board.size() == limit;
+        // if the board is not full or the current node is stronger than the weakest node in the array then make space for it
+        if (!full || node->totalAccesses > board.back()->totalAccesses) {
+            board.push_back(node); // temporary slot at the bottom
+            std::size_t i = board.size() - 1;
+
+            while (i > 0 && board[i - 1]->totalAccesses < node->totalAccesses) {
+                board[i] = board[i - 1]; // Move the weaker node down until the current node is no longer stronger
+                --i;
+            }
+            board[i] = node; // Set the node in its correct position to mantain the board's order
+            if (board.size() > limit) board.pop_back(); // Pop the weakest node out if the board is full
+
+        }
+        collectTop(node->right, limit, board);
+    }
+
+    std::vector<AVLNode*> nMostAccessed(AVLNode* node, int n) {
+        std::vector<AVLNode*> board;
+        if (n > 0) collectTop(node, n, board);
+        return board;
     }
 
 	void destroy(AVLNode *n) {
