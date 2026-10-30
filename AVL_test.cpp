@@ -13,7 +13,7 @@ void runTest(const std::string& label, const std::vector<long long>& keys) {
 
     auto start = std::chrono::steady_clock::now();
     for (long long key : keys) {
-        tree.insert(key, 1, "x");
+        tree.insert(key, "x", 1);
     }
     auto end = std::chrono::steady_clock::now();
 
@@ -27,7 +27,7 @@ void runTest(const std::string& label, const std::vector<long long>& keys) {
 int main() {
     std::mt19937 gen(std::random_device{}());
 
-    for (long long n : {1000LL, 100000LL}) {
+    for (long long n : {1000LL, 100000LL, 1000000LL}) {
         std::vector<long long> ascending;
         for (long long i = 1; i <= n; ++i) ascending.push_back(i);
 
@@ -39,7 +39,7 @@ int main() {
         runTest("Ascending ", ascending);
         runTest("Descending", descending);
         runTest("Shuffled  ", shuffled);
-        std::cout << "\n";
+        std::cout << "\nNo height should be greater than 1.44*log2(n)\n";
     }
     return 0;
 }
