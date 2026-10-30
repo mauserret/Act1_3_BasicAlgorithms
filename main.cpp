@@ -22,6 +22,7 @@ Date: 31/10/2026
 #include <stdexcept>
 #include "Log.h"
 #include "AVL.h"
+#include "IpUtils.h"
 
 enum class Criteria {
     DATE, 
