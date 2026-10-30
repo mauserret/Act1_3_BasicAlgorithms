@@ -1,6 +1,7 @@
 #include "AVL.h"
 #include "Log.h"
 #include <iostream>
+#include <iomanip>
 #include <vector>
 #include <fstream>
 #include <sstream>
@@ -53,34 +54,48 @@ long long getTotalIp (const std::string& ip) {
     return ip1 * pow(256, 3) + ip2 * pow(256, 2) + ip3 * 256 + ip4;
 }
 
-void printTopNodes(const int& n, AVL& tree) {
-    std::cout << "\n --- Top " << n << " IPs ---\n";
+void printTopNodes(int n, AVL& tree, std::ostream& out) {
+    out << "\n --- Top " << n << " IPs ---\n";
     for (AVLNode* node : tree.nMostAccessed(n)) {
-        float totAccess = node->totalAccesses;
-        float totSuccess = node->totalSuccess;
-    
-        std::cout << node->strIp 
-                  << " | Accesses: " << totAccess
-                  << " | Success: " << totSuccess
-                  << " | Success %: " << float((totSuccess / totAccess) * 100) <<  "\n";
+        double percentage = 100.0 * node->totalSuccess / node->totalAccesses;
+        out << node->strIp
+            << " | Accesses: " << node->totalAccesses
+            << " | Success: " << node->totalSuccess
+            << " | Success %: " << std::fixed << std::setprecision(2) << percentage << "\n";
     }
 }
 
-void printMonthlyReport(std::string& month, AVL&tree) {
+void printMonthlyReport(const std::string& month, AVL& tree, std::ostream& out) {
     int distinct = tree.getDistinctIps();
-    double average = distinct == 0 ? 0.0 : 
-                    static_cast<double>(tree.getTotalRecorded()) / distinct;
-    std::cout << "\n --- End of month " << month << "---\n"
-              << "Distinct IPs: " << distinct << "\n"
-              << "Average accesses per IP: " << average << "\n"
-              << "Top 5 IPs: \n";
+    double average = distinct == 0 ? 0.0
+                   : static_cast<double>(tree.getTotalRecorded()) / distinct;
+    out << "\n --- End of month " << month << " ---\n"
+        << "Distinct IPs: " << distinct << "\n"
+        << "Average accesses per IP: " << std::fixed << std::setprecision(2) << average << "\n"
+        << "Top 5 IPs:\n";
     for (AVLNode* node : tree.nMostAccessed(5)) {
-        std::cout << "  " << node->strIp 
-                  << " | Accesses: " << node->totalAccesses << "\n";
+        out << "  " << node->strIp << " | Accesses: " << node->totalAccesses << "\n";
     }
 }
 
-AVL* getAVLTree(const std::string& file_name) {
+// Prints the header, then the range query, to one stream
+void printRange(AVL& tree, const std::string& startIp, const std::string& endIp, std::ostream& out) {
+    out << "\n--- IPs in range: " << startIp << " - " << endIp << " ---\n";
+    tree.rangeQuery(getTotalIp(startIp), getTotalIp(endIp), out);
+}
+
+// Finds the top IP and queries its whole x.y.z.0 - x.y.z.255 block
+void printTopIpBlock(AVL& tree, std::ostream& out) {
+    std::vector<AVLNode*> top = tree.nMostAccessed(1);
+    if (top.empty()) return;
+
+    std::string prefix = top[0]->strIp.substr(0, top[0]->strIp.rfind('.'));  // "x.y.z"
+    out << "\nTop IP: " << top[0]->strIp << " -> querying its block";
+    printRange(tree, prefix + ".0", prefix + ".255", out);
+}
+
+AVL* getAVLTree(const std::string& file_name, std::ofstream& outFile) {
+
     std::ifstream file(file_name);
     if (!file.is_open()) {
         std::cout << "Couldn't open the file \n";
@@ -106,7 +121,8 @@ AVL* getAVLTree(const std::string& file_name) {
         getline(ss, msg);
 
         if (!previousMonth.empty() && month != previousMonth) {
-            printMonthlyReport(previousMonth, *tree);
+            printMonthlyReport(previousMonth, *tree, std::cout);
+            printMonthlyReport(previousMonth, *tree, outFile);
         }
         previousMonth = month;
 
@@ -118,10 +134,12 @@ AVL* getAVLTree(const std::string& file_name) {
 
     // The last month never sees a "next month" line
     if (!previousMonth.empty()) {
-        printMonthlyReport(previousMonth, *tree);
+        printMonthlyReport(previousMonth, *tree, std::cout);
+        printMonthlyReport(previousMonth, *tree, outFile);
     }
 
-    printTopNodes(15, *tree);
+    printTopNodes(15, *tree, std::cout);
+    printTopNodes(15, *tree, outFile);
 
     file.close();
     return tree;
@@ -138,7 +156,16 @@ int main(int argc, char* argv[]) {
         return 1;
     }
 
-    AVL* Tree = getAVLTree(argv[1]);
+    std::ofstream outFile("output.txt");
+    if (!outFile.is_open()) {
+        std::cout << "Couldn't create output.txt\n";
+        return 1;
+    }
+
+    AVL* Tree = getAVLTree(argv[1], outFile);
+
+    printTopIpBlock(*Tree, std::cout);
+    printTopIpBlock(*Tree, outFile);
 
     int option = 0;
     do {
@@ -172,7 +199,7 @@ int main(int argc, char* argv[]) {
                     throw std::invalid_argument("Invalid IP range: " + startIp + " - " + endIp);
                 }
                 std::cout << "\n--- IPs in range: " << startIp << " - " << endIp << "---\n";
-                Tree->rangeQuery(totalStartIp, totalEndIp); 
+                printRange(*Tree, startIp, endIp, std::cout);
 
             } catch (const std::invalid_argument& e) {
                 std::cin.ignore(10000, '\n');
@@ -180,10 +207,15 @@ int main(int argc, char* argv[]) {
             }
         } else if (option == 2) {
                 try {
-                    int n;
+                    int n = 0;
                     std::cout << "Enter n: ";
-                    std::cin >> n;
-                    printTopNodes(n, *Tree);
+                    if (!(std::cin >> n) || n <= 0) {
+                        std::cin.clear();
+                        std::cin.ignore(10000, '\n');
+                        std::cout << "Invalid n\n";
+                    } else {
+                        printTopNodes(n, *Tree, std::cout);
+                    }
                 } catch (const std::invalid_argument& e) {
                     std::cin.ignore(10000, '\n');
                     std::cerr << "Error: " << e.what() << '\n';
