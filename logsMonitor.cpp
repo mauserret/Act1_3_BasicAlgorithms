@@ -1,188 +1,76 @@
+/**
+ * Program: Benchmark that inserts ascending, descending and shuffled keys in
+ *          an AVL tree and compares the resulting height and insertion time
+ *          against log2(n). The height of an AVL tree never exceeds roughly
+ *          1.44 * log2(n), even with sorted input.
+ * Authors: A01648241
+ *          A01642638
+ *          A01648221
+ *          A01643073
+ * Date: 31/10/2026
+*/
+
 #include "AVL.h"
-#include "Log.h"
-#include "IpUtils.h"
-#include <iostream>
-#include <iomanip>
-#include <vector>
-#include <fstream>
-#include <sstream>
-#include <string>
+#include <algorithm>
+#include <chrono>
 #include <cmath>
-#include <stdexcept>
+#include <iostream>
+#include <random>
+#include <string>
+#include <vector>
 
-void printTopNodes(int n, AVL& tree, std::ostream& out) {
-    out << "\n --- Top " << n << " IPs ---\n";
-    for (AVLNode* node : tree.nMostAccessed(n)) {
-        double percentage = 100.0 * node->totalSuccess / node->totalAccesses;
-        out << node->strIp
-            << " | Accesses: " << node->totalAccesses
-            << " | Success: " << node->totalSuccess
-            << " | Success %: " << std::fixed << std::setprecision(2) << percentage << "\n";
-    }
+const std::vector<long long> TEST_SIZES = {1000LL, 100000LL, 1000000LL};
+const std::string DUMMY_IP_TEXT = "x";
+const int DUMMY_SUCCESS = 1;
+
+/**
+ * @brief Inserts every key into a fresh tree, timing only the inserts, and
+ *        prints the height reached.
+ * @param label Name of the key order being tested.
+ * @param keys Keys to insert, in the order they are inserted.
+ * @note Time O(n log n) for n keys: n inserts of O(log n) each. Space O(n)
+ *       for the tree.
+ */
+void runTest(const std::string& label, const std::vector<long long>& keys) {
+	AVL tree{};
+	auto start = std::chrono::steady_clock::now();
+
+	for (long long key : keys) {
+		tree.insert(key, DUMMY_IP_TEXT, DUMMY_SUCCESS);
+	}
+
+	auto end = std::chrono::steady_clock::now();
+	std::chrono::duration<double, std::milli> elapsed = end - start;
+
+	std::cout << label << " | n = " << keys.size()
+		<< " | height = " << tree.height()
+		<< " | log2(n) = " << std::log2(static_cast<double>(keys.size()))
+		<< " | time = " << elapsed.count() << " ms\n";
 }
 
-void printMonthlyReport(const std::string& month, AVL& tree, std::ostream& out) {
-    int distinct = tree.getDistinctIps();
-    double average = distinct == 0 ? 0.0
-                   : static_cast<double>(tree.getTotalRecorded()) / distinct;
-    out << "\n --- End of month " << month << " ---\n"
-        << "Distinct IPs: " << distinct << "\n"
-        << "Average accesses per IP: " << std::fixed << std::setprecision(2) << average << "\n"
-        << "Top 5 IPs:\n";
-    for (AVLNode* node : tree.nMostAccessed(5)) {
-        out << "  " << node->strIp << " | Accesses: " << node->totalAccesses << "\n";
-    }
-}
+/**
+ * @brief Entry point: runs the three key orders for every size in TEST_SIZES.
+ * @return 0 when all the tests finish.
+ */
+int main() {
+	std::mt19937 gen(std::random_device{}());
 
-// Prints the header, then the range query, to one stream
-void printRange(AVL& tree, const std::string& startIp, const std::string& endIp, std::ostream& out) {
-    out << "\n--- IPs in range: " << startIp << " - " << endIp << " ---\n";
-    tree.rangeQuery(getTotalIp(startIp), getTotalIp(endIp), out);
-}
+	for (long long n : TEST_SIZES) {
+		std::vector<long long> ascending = {};
 
-// Finds the top IP and queries its whole x.y.z.0 - x.y.z.255 block
-void printTopIpBlock(AVL& tree, std::ostream& out) {
-    std::vector<AVLNode*> top = tree.nMostAccessed(1);
-    if (top.empty()) return;
+		for (long long i = 1; i <= n; ++i) {
+			ascending.push_back(i);
+		}
 
-    std::string prefix = top[0]->strIp.substr(0, top[0]->strIp.rfind('.'));  // "x.y.z"
-    out << "\nTop IP: " << top[0]->strIp << " -> querying its block";
-    printRange(tree, prefix + ".0", prefix + ".255", out);
-}
+		std::vector<long long> descending(ascending.rbegin(), ascending.rend());
+		std::vector<long long> shuffled = ascending;
 
-AVL* getAVLTree(const std::string& file_name, std::ofstream& outFile) {
+		std::shuffle(shuffled.begin(), shuffled.end(), gen);
 
-    std::ifstream file(file_name);
-    if (!file.is_open()) {
-        std::cout << "Couldn't open the file \n";
-        exit(1);
-    }
-
-    AVL* tree = new AVL;
-    std::string previousMonth = "";
-
-    std::string line;
-    while (getline(file, line)) {
-        std::stringstream ss(line);
-        std::string month = "", strDay = "", strHour = "", strMin = "", strSec = "", ip = "", host = "", msg = "";
-
-
-        getline(ss, month, ' ');
-        getline(ss, strDay, ' ');
-        getline(ss, strHour, ':');
-        getline(ss, strMin, ':');
-        getline(ss, strSec, ' ');
-        getline(ss, ip, ' ');
-        getline(ss, host, ' ');
-        getline(ss, msg);
-
-        if (!previousMonth.empty() && month != previousMonth) {
-            printMonthlyReport(previousMonth, *tree, std::cout);
-            printMonthlyReport(previousMonth, *tree, outFile);
-        }
-        previousMonth = month;
-
-        long long numerictIp = getTotalIp(ip);
-        std::string address = ip.substr(0, ip.find(':'));   // drop the port
-        int success = (msg.rfind("Accepted", 0) == 0) ? 1 : 0;   // starts-with check
-        tree->insert(numerictIp, address, success);
-    }
-
-    // The last month never sees a "next month" line
-    if (!previousMonth.empty()) {
-        printMonthlyReport(previousMonth, *tree, std::cout);
-        printMonthlyReport(previousMonth, *tree, outFile);
-    }
-
-    printTopNodes(15, *tree, std::cout);
-    printTopNodes(15, *tree, outFile);
-
-    file.close();
-    return tree;
-}
-
-template <typename T>
-bool validSearchRange(const T& startRange, const T& endRange) {
-    return endRange >= startRange;
-}
-
-int main(int argc, char* argv[]) {
-    if (argc < 2) {
-        std::cout << "Usage: ./main <input_file>\n";
-        return 1;
-    }
-
-    std::ofstream outFile("output.txt");
-    if (!outFile.is_open()) {
-        std::cout << "Couldn't create output.txt\n";
-        return 1;
-    }
-
-    AVL* Tree = getAVLTree(argv[1], outFile);
-
-    printTopIpBlock(*Tree, std::cout);
-    printTopIpBlock(*Tree, outFile);
-
-    int option = 0;
-    do {
-        std::cout << "\nSelect an option: " << "\n"
-        << "1. Search by IP range" << "\n"
-        << "2. Get top n accessed IPs" << "\n"
-        << "3. Exit\n" 
-        << "Option: ";
-
-        if (!(std::cin >> option)) {
-            std::cin.clear();
-            std::cin.ignore(10000, '\n');
-            std::cout << "Invalid option\n";
-            continue;
-        }
-        if (option == 1) {
-            try {
-                std::string startIp = "", endIp = "";
-                
-                std::cout << "Enter start IP (Ej. 192.0.2.10): ";
-                std::cin >> startIp;
-
-                long long totalStartIp = getTotalIp(startIp);
-
-                std::cout << "Enter end IP (Ej. 192.0.2.11): ";
-                std::cin >> endIp;
-
-                long long totalEndIp = getTotalIp(endIp);
-
-                if (!validSearchRange(totalStartIp, totalEndIp)) {
-                    throw std::invalid_argument("Invalid IP range: " + startIp + " - " + endIp);
-                }
-                std::cout << "\n--- IPs in range: " << startIp << " - " << endIp << "---\n";
-                printRange(*Tree, startIp, endIp, std::cout);
-
-            } catch (const std::invalid_argument& e) {
-                std::cin.ignore(10000, '\n');
-                std::cerr << "Error: " << e.what() << '\n';
-            }
-        } else if (option == 2) {
-                try {
-                    int n = 0;
-                    std::cout << "Enter n: ";
-                    if (!(std::cin >> n) || n <= 0) {
-                        std::cin.clear();
-                        std::cin.ignore(10000, '\n');
-                        std::cout << "Invalid n\n";
-                    } else {
-                        printTopNodes(n, *Tree, std::cout);
-                    }
-                } catch (const std::invalid_argument& e) {
-                    std::cin.ignore(10000, '\n');
-                    std::cerr << "Error: " << e.what() << '\n';
-                }
-        } else if(option == 3) {
-            std::cout << "\nI'll be back\n";
-        } else {
-            std::cout << "Invalid option\n";
-        }
-    } while(option != 3);
-
-    delete Tree;
-    return 0;    
+		runTest("Ascending ", ascending);
+		runTest("Descending", descending);
+		runTest("Shuffled  ", shuffled);
+		std::cout << "\nNo height should be greater than 1.44*log2(n)\n";
+	}
+	return 0;
 }
