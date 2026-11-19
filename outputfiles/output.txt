@@ -1,0 +1,188 @@
+
+ --- End of month Jun ---
+Distinct IPs: 284
+Average accesses per IP: 11.91
+Top 5 IPs:
+  203.0.113.140 | Accesses: 194
+  203.0.113.227 | Accesses: 177
+  192.0.2.166 | Accesses: 166
+  203.0.113.24 | Accesses: 153
+  198.51.100.66 | Accesses: 139
+
+ --- End of month Jul ---
+Distinct IPs: 308
+Average accesses per IP: 21.62
+Top 5 IPs:
+  203.0.113.140 | Accesses: 399
+  203.0.113.227 | Accesses: 346
+  192.0.2.166 | Accesses: 302
+  198.51.100.66 | Accesses: 281
+  203.0.113.24 | Accesses: 270
+
+ --- End of month Aug ---
+Distinct IPs: 312
+Average accesses per IP: 31.96
+Top 5 IPs:
+  203.0.113.140 | Accesses: 579
+  203.0.113.227 | Accesses: 523
+  192.0.2.166 | Accesses: 464
+  198.51.100.66 | Accesses: 409
+  203.0.113.24 | Accesses: 396
+
+ --- End of month Sep ---
+Distinct IPs: 312
+Average accesses per IP: 42.85
+Top 5 IPs:
+  203.0.113.140 | Accesses: 755
+  203.0.113.227 | Accesses: 687
+  192.0.2.166 | Accesses: 625
+  198.51.100.66 | Accesses: 539
+  203.0.113.24 | Accesses: 535
+
+ --- End of month Oct ---
+Distinct IPs: 312
+Average accesses per IP: 53.87
+Top 5 IPs:
+  203.0.113.140 | Accesses: 940
+  203.0.113.227 | Accesses: 855
+  192.0.2.166 | Accesses: 780
+  198.51.100.66 | Accesses: 705
+  203.0.113.24 | Accesses: 640
+
+ --- Top 15 IPs ---
+203.0.113.140 | Accesses: 940 | Success: 0 | Success %: 0.00
+203.0.113.227 | Accesses: 855 | Success: 0 | Success %: 0.00
+192.0.2.166 | Accesses: 780 | Success: 0 | Success %: 0.00
+198.51.100.66 | Accesses: 705 | Success: 0 | Success %: 0.00
+203.0.113.24 | Accesses: 640 | Success: 0 | Success %: 0.00
+198.51.100.163 | Accesses: 427 | Success: 0 | Success %: 0.00
+192.0.2.254 | Accesses: 408 | Success: 0 | Success %: 0.00
+198.51.100.117 | Accesses: 407 | Success: 0 | Success %: 0.00
+198.51.100.8 | Accesses: 397 | Success: 0 | Success %: 0.00
+192.0.2.14 | Accesses: 307 | Success: 293 | Success %: 95.44
+192.0.2.11 | Accesses: 299 | Success: 285 | Success %: 95.32
+192.0.2.18 | Accesses: 296 | Success: 285 | Success %: 96.28
+192.0.2.12 | Accesses: 294 | Success: 277 | Success %: 94.22
+192.0.2.19 | Accesses: 291 | Success: 268 | Success %: 92.10
+192.0.2.16 | Accesses: 281 | Success: 264 | Success %: 93.95
+
+Top IP: 203.0.113.140 -> querying its block
+--- IPs in range: 203.0.113.0 - 203.0.113.255 ---
+203.0.113.1 | Accesses: 10
+203.0.113.4 | Accesses: 6
+203.0.113.6 | Accesses: 7
+203.0.113.7 | Accesses: 59
+203.0.113.10 | Accesses: 10
+203.0.113.17 | Accesses: 60
+203.0.113.18 | Accesses: 6
+203.0.113.20 | Accesses: 66
+203.0.113.22 | Accesses: 11
+203.0.113.24 | Accesses: 640
+203.0.113.26 | Accesses: 8
+203.0.113.27 | Accesses: 10
+203.0.113.29 | Accesses: 11
+203.0.113.31 | Accesses: 49
+203.0.113.32 | Accesses: 68
+203.0.113.34 | Accesses: 12
+203.0.113.35 | Accesses: 6
+203.0.113.36 | Accesses: 13
+203.0.113.37 | Accesses: 9
+203.0.113.40 | Accesses: 14
+203.0.113.41 | Accesses: 65
+203.0.113.43 | Accesses: 12
+203.0.113.47 | Accesses: 64
+203.0.113.48 | Accesses: 12
+203.0.113.50 | Accesses: 9
+203.0.113.53 | Accesses: 75
+203.0.113.54 | Accesses: 71
+203.0.113.55 | Accesses: 61
+203.0.113.59 | Accesses: 10
+203.0.113.60 | Accesses: 13
+203.0.113.61 | Accesses: 8
+203.0.113.66 | Accesses: 10
+203.0.113.74 | Accesses: 10
+203.0.113.77 | Accesses: 51
+203.0.113.78 | Accesses: 3
+203.0.113.79 | Accesses: 4
+203.0.113.86 | Accesses: 72
+203.0.113.87 | Accesses: 7
+203.0.113.93 | Accesses: 13
+203.0.113.94 | Accesses: 8
+203.0.113.98 | Accesses: 9
+203.0.113.100 | Accesses: 11
+203.0.113.101 | Accesses: 13
+203.0.113.102 | Accesses: 49
+203.0.113.104 | Accesses: 5
+203.0.113.105 | Accesses: 6
+203.0.113.106 | Accesses: 64
+203.0.113.110 | Accesses: 46
+203.0.113.116 | Accesses: 10
+203.0.113.117 | Accesses: 7
+203.0.113.120 | Accesses: 5
+203.0.113.123 | Accesses: 11
+203.0.113.126 | Accesses: 51
+203.0.113.127 | Accesses: 50
+203.0.113.128 | Accesses: 11
+203.0.113.129 | Accesses: 9
+203.0.113.130 | Accesses: 57
+203.0.113.134 | Accesses: 9
+203.0.113.136 | Accesses: 10
+203.0.113.137 | Accesses: 9
+203.0.113.138 | Accesses: 5
+203.0.113.140 | Accesses: 940
+203.0.113.141 | Accesses: 13
+203.0.113.143 | Accesses: 65
+203.0.113.146 | Accesses: 64
+203.0.113.147 | Accesses: 8
+203.0.113.148 | Accesses: 9
+203.0.113.152 | Accesses: 9
+203.0.113.156 | Accesses: 49
+203.0.113.157 | Accesses: 5
+203.0.113.159 | Accesses: 64
+203.0.113.161 | Accesses: 7
+203.0.113.166 | Accesses: 9
+203.0.113.167 | Accesses: 60
+203.0.113.169 | Accesses: 10
+203.0.113.171 | Accesses: 6
+203.0.113.172 | Accesses: 4
+203.0.113.173 | Accesses: 5
+203.0.113.175 | Accesses: 4
+203.0.113.176 | Accesses: 9
+203.0.113.178 | Accesses: 12
+203.0.113.179 | Accesses: 6
+203.0.113.180 | Accesses: 44
+203.0.113.181 | Accesses: 48
+203.0.113.182 | Accesses: 10
+203.0.113.185 | Accesses: 5
+203.0.113.187 | Accesses: 64
+203.0.113.188 | Accesses: 9
+203.0.113.190 | Accesses: 60
+203.0.113.191 | Accesses: 65
+203.0.113.193 | Accesses: 5
+203.0.113.201 | Accesses: 11
+203.0.113.204 | Accesses: 11
+203.0.113.206 | Accesses: 8
+203.0.113.208 | Accesses: 11
+203.0.113.210 | Accesses: 5
+203.0.113.212 | Accesses: 5
+203.0.113.213 | Accesses: 12
+203.0.113.214 | Accesses: 10
+203.0.113.217 | Accesses: 10
+203.0.113.219 | Accesses: 6
+203.0.113.226 | Accesses: 59
+203.0.113.227 | Accesses: 855
+203.0.113.228 | Accesses: 50
+203.0.113.229 | Accesses: 9
+203.0.113.230 | Accesses: 7
+203.0.113.231 | Accesses: 12
+203.0.113.232 | Accesses: 10
+203.0.113.238 | Accesses: 5
+203.0.113.243 | Accesses: 7
+203.0.113.244 | Accesses: 10
+203.0.113.245 | Accesses: 79
+203.0.113.246 | Accesses: 52
+203.0.113.247 | Accesses: 9
+203.0.113.253 | Accesses: 58
+203.0.113.254 | Accesses: 52
+Distinct IPs: 116
+Total accesses: 5131
