@@ -11,6 +11,7 @@ Date: 19/11/2026
  */
 
 #include "ArcList.h"
+#include "IpUtils.h"
 #include <fstream>
 #include <iomanip>
 #include <iostream>
@@ -56,7 +57,7 @@ bool nameComesFirst(const std::string& first, const std::string& second, bool is
 	if (isServer) {
 		return first < second;
 	}
-	return ipToNumber(first) < ipToNumber(second);
+	return getTotalIp(first) < getTotalIp(second);
 }
 
 /**
