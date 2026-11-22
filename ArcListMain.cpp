@@ -30,22 +30,6 @@ struct RankEntry {
 };
 
 /**
- * @brief Turns a dotted IP into a number so IPs compare by value, not as text.
- * @param ip IP in the form a.b.c.d.
- * @return Numeric value of the IP.
- * @note Time O(L), L = length of the text. Space O(L).
- */
-unsigned long long ipToNumber(const std::string& ip) {
-	std::istringstream ipStream(ip);
-	std::string octet = "";
-	unsigned long long value = 0;
-	while (std::getline(ipStream, octet, '.')) {
-		value = value * OCTET_BASE + std::stoull(octet);
-	}
-	return value;
-}
-
-/**
  * @brief Tie-break by name: the smaller IP (numeric) or server name goes first.
  * @param first Name of the first vertex.
  * @param second Name of the second vertex.
