@@ -81,7 +81,7 @@ public:
 		int id = 0;
 		int vertexCount = static_cast<int>(vertices.size());
 		while (id < vertexCount && !(vertices[id].name == name && vertices[id].isServer == isServer)) {
-			++id;
+			id++;
 		}
 		if (id == vertexCount) {
 			vertices.push_back(Vertex(name, isServer));
@@ -104,7 +104,7 @@ public:
 			arc = arc->nextOut;
 		}
 		if (arc != nullptr) {
-			++arc->weight;
+			arc->weight++;
 		} else {
 			arc = new Arc{origin, destination, 1, vertices[origin].outHead, vertices[destination].inHead};
 			vertices[origin].outHead = arc;
@@ -123,7 +123,7 @@ public:
 		int count = 0;
 		for (const Vertex& vertex : vertices) {
 			if (vertex.isServer == isServer) {
-				++count;
+				count++;
 			}
 		}
 		return count;
@@ -189,7 +189,7 @@ public:
 	int outDegree(int vertexId) const {
 		int degree = 0;
 		for (const Arc* arc = vertices[vertexId].outHead; arc != nullptr; arc = arc->nextOut) {
-			++degree;
+			degree++;
 		}
 		return degree;
 	}
@@ -203,7 +203,7 @@ public:
 	int inDegree(int vertexId) const {
 		int degree = 0;
 		for (const Arc* arc = vertices[vertexId].inHead; arc != nullptr; arc = arc->nextIn) {
-			++degree;
+			degree++;
 		}
 		return degree;
 	}

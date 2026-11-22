@@ -19,7 +19,7 @@ Date: 19/11/2026
 #include <string>
 #include <vector>
 
-const std::string OUTPUT_FILE_NAME = "output.txt";
+const std::string OUTPUT_FILE_NAME = "ArcListOutput.txt";
 const int TOP_COUNT = 5;
 const unsigned long long OCTET_BASE = 256;
 
@@ -76,7 +76,7 @@ bool ranksBefore(const RankEntry& first, const RankEntry& second, const ArcListG
 void insertInRanking(std::vector<RankEntry>& ranking, const RankEntry& entry, const ArcListGraph& graph, bool isServer) {
 	int position = static_cast<int>(ranking.size());
 	while (position > 0 && ranksBefore(entry, ranking[position - 1], graph, isServer)) {
-		--position;
+		position--;
 	}
 	if (position < TOP_COUNT) {
 		ranking.insert(ranking.begin() + position, entry);
@@ -98,7 +98,7 @@ void insertInRanking(std::vector<RankEntry>& ranking, const RankEntry& entry, co
  */
 std::vector<RankEntry> buildRanking(const ArcListGraph& graph, bool isServer) {
 	std::vector<RankEntry> ranking;
-	for (int vertexId = 0; vertexId < graph.size(); ++vertexId) {
+	for (int vertexId = 0; vertexId < graph.size(); vertexId++) {
 		if (graph.isServer(vertexId) == isServer) {
 			RankEntry entry = {vertexId, 0, 0};
 			entry.degree = isServer ? graph.inDegree(vertexId) : graph.outDegree(vertexId);
@@ -123,6 +123,7 @@ bool loadGraph(const std::string& fileName, ArcListGraph& graph) {
 	std::string line = "";
 	while (opened && std::getline(file, line)) {
 		std::istringstream lineStream(line);
+		// Oct 24 03:27:38 198.51.100.66:5062 ftp.almacen-norte.example Failed password for admin
 		std::string skipped = "";
 		std::string source = "";
 		std::string host = "";
