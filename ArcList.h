@@ -9,9 +9,8 @@ Authors: A01648241
 Date: 19/11/2026
  */
 
-#ifndef ARC_LIST_H
-#define ARC_LIST_H
 
+#pragma once
 #include <string>
 #include <vector>
 
@@ -237,4 +236,3 @@ public:
 	}
 };
 
-#endif
