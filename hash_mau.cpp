@@ -14,15 +14,14 @@ struct ServerInfo {
     std::array<int, 24> hourlyAccess{};
 };
 
-void sortMap(std::unordered_map<std::string, ServerInfo>& servers, 
-             std::vector<std::pair<std::string, ServerInfo>>& sortedServers) {
-                for (const auto& entry : servers) {
-                    sortedServers.push_back(entry);
-                }
-                // sort with std::sort using a lambda function to act on number of attempts (ascending)
-                std::sort(sortedServers.begin(), sortedServers.end(), [](const auto& a, const auto& b) {
-                    return a.second.attempts > b.second.attempts;
-                }); 
+void sortMap(const std::unordered_map<std::string, ServerInfo>& servers, std::vector<std::pair<std::string, ServerInfo>>& sortedServers) {
+    for (const auto& entry : servers) {
+        sortedServers.push_back(entry);
+    }
+    // sort with std::sort using a lambda function to act on number of attempts (descending)
+    std::sort(sortedServers.begin(), sortedServers.end(), [](const auto& a, const auto& b) {
+        return a.second.attempts > b.second.attempts;
+    }); 
 }
 
 bool getServers(const std::string& fileName, std::unordered_map<std::string, ServerInfo>& serversMap) {
@@ -64,6 +63,16 @@ void printServers(const std::vector<std::pair<std::string, ServerInfo>>& sortedS
     }
 }
 
+void printHourly(const std::unordered_map<std::string, ServerInfo>& serversMap, const std::vector<std::string>& names) {
+    for (auto& name : names) {
+        std::cout << name << " ";
+        for(const auto& timesPerHour : serversMap.find(name)->second.hourlyAccess) {
+            std::cout << timesPerHour << " ";
+        }
+        std::cout << "\n";
+    }
+}
+
 int main(int argc, char* argv[]) {
     int exitCode = 0;
 	if (argc < 2) {
@@ -72,17 +81,14 @@ int main(int argc, char* argv[]) {
 	} else {
 		std::unordered_map<std::string, ServerInfo> servers;
         std::vector<std::pair<std::string, ServerInfo>> sortedServers;
+        std::vector<std::string> names{"db.nube-sur.example","print.almacen-norte.example","intranet.dev-interno.example"};
 		if (!getServers(argv[1], servers)) {
 			std::cout << "Couldn't open the file\n";
 			exitCode = 1;
-        /*
-		} else if (!outFile.is_open()) {
-			std::cout << "Couldn't create " << OUTPUT_FILE_NAME << "\n";
-			exitCode = 1;
-        */
 		} else {
 			sortMap(servers, sortedServers);
             printServers(sortedServers);
+            printHourly(servers, names);
 		}
 	}
 	return exitCode;
